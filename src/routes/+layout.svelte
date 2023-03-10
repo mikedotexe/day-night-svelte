@@ -1,18 +1,11 @@
 <script>
-	// import Header from './Header.svelte';
 	import './styles.css';
 </script>
 
 <div class="app">
-<!--	<Header />-->
-
 	<main>
 		<slot />
 	</main>
-
-<!--	<footer>-->
-<!--		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>-->
-<!--	</footer>-->
 </div>
 
 <style>
@@ -33,21 +26,14 @@
 		box-sizing: border-box;
 	}
 
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
+	:global(body) {
+		background-color: #336699;
+		transition: background-color 1s ease-out;
 	}
 
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
+	:global(body.night) {
+		/* Taken from a zoomed-in pixel on CronCat logo */
+		background-color: #333333;
+		transition: background-color 1s ease-out;
 	}
 </style>
