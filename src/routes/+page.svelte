@@ -5,26 +5,37 @@
     import moon from '$lib/images/moon.svg';
     import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate"
     import {env} from "$env/dynamic/public";
-    import {dayNightToggle} from "./body-toggle.ts";
+    import {daytime, nighttime} from "./body-toggle.ts";
     import {bounceIn} from 'svelte/easing';
 
-    let booleanValue
+    let booleanValue = { result: false }
     let hardcoded = false
 
     const updateBooleanFromContract = async () => {
         try {
-            const cwClient = await CosmWasmClient.connect(env.PUBLIC_ENDPOINT || 'https://rpc.elgafar-1.stargaze-apis.com:443')
+            const cwClient = await CosmWasmClient.connect(env.PUBLIC_RPC_ENDPOINT || 'https://rpc.elgafar-1.stargaze-apis.com:443')
 
             const currentValue = await cwClient.queryContractSmart(env.PUBLIC_BOOLEAN_ADDRESS || 'stars19869yl5mz65zp8hth3fmfhglatcmq5zv30eaq0j3my2q7rxqc44s5h2lhx', {
                 "get_value": {}
             })
-            if (currentValue !== booleanValue && browser) dayNightToggle()
+
+            if (currentValue.result !== booleanValue.result && browser) {
+                if (currentValue.result === true) {
+                    nighttime()
+                } else {
+                    daytime()
+                }
+            }
+
+            // If you begin the app, and the boolean is true (nighttime) but booleanValue
+
             booleanValue = currentValue
         } catch (e) {
             console.warn('Ran into error querying. Show must go on…', e)
         }
     }
 
+    // Right as we start the app, let's check the boolean contract
     onMount(async () => {
         await updateBooleanFromContract()
     })
@@ -84,7 +95,7 @@
 
 <section>
     <!--{#if hardcoded === true}-->
-    {#if booleanValue === true}
+    {#if booleanValue && booleanValue.result === true}
         <object type="image/svg+xml" data={moon} class="svg" in:moonTransition={{duration: 666}} title="moon"></object>
     {:else}
         <object type="image/svg+xml" data={sun} class="svg" in:sunTransition={{duration: 666}} title="sun"></object>

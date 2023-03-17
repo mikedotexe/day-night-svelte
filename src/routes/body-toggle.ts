@@ -1,3 +1,7 @@
-export function dayNightToggle() {
-    window.document.body.classList.toggle('night')
+export function daytime() {
+    window.document.body.classList.remove('night')
+}
+
+export function nighttime() {
+    window.document.body.classList.add('night')
 }
